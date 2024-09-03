@@ -15,7 +15,7 @@
 
 ## 🚀 Try it Out
 
-Check out the live demo of the ML Evaluation Tutor: [Live Demo](https://github.com/youngpake/ml-training-simulator) 🌐
+Check out the live demo of the ML Evaluation Tutor: [Live Demo](https://youngpake.github.io/ml-training-simulator/) 🌐
 
 ## 📹 Demo Video
 
