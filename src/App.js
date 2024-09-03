@@ -7,10 +7,11 @@ import UserInput from './components/UserInput';
 import Feedback from './components/Feedback';
 import CelebrationModal from './components/CelebrationModal';
 import HintModal from './components/HintModal';
-import {EvaluationToolSelector, defaultTools} from './components/EvaluationToolSelector';
 import { encryptData } from './components/encryption';
 import { generateCompletion } from './components/OpenAIApi';
 import { predefinedScenarios as initialPredefinedScenarios } from './components/Scenarios';
+
+const allMetrics = ['Accuracy', 'Loss', 'Validation Loss', 'Precision', 'Recall', 'F1 Score'];
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(true);
@@ -19,8 +20,6 @@ const App = () => {
   const [showHintModal, setShowHintModal] = useState(false);
   const [currentHint, setCurrentHint] = useState('');
   const [apiKeyEntered, setApiKeyEntered] = useState(false);
-  const [selectedTools, setSelectedTools] = useState([]);
-  const [learningStage, setLearningStage] = useState('toolSelection');
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const [currentScenarioImprovement, setCurrentScenarioImprovement] = useState(0);
@@ -46,12 +45,7 @@ const App = () => {
     const encrypted = encryptData(apiKey);
     setEncryptedApiKey(encrypted);
     setApiKeyEntered(true);
-  }, []);
-
-  const handleToolSelection = useCallback((tool) => {
-    setSelectedTools(prev => 
-      prev.includes(tool) ? prev.filter(t => t !== tool && !defaultTools.includes(t)) : [...prev, tool]
-    );
+    startLearning();
   }, []);
 
   const startLearning = useCallback(() => {
@@ -61,8 +55,7 @@ const App = () => {
       appliedStrategies: [],
       currentIteration: 1,
     }));
-    setLearningStage('quiz');
-  }, []);
+  }, [predefinedScenarios]);
 
   const generateHint = useCallback(() => {
     const currentScenario = predefinedScenarios[currentScenarioIndex];
@@ -95,7 +88,7 @@ const App = () => {
 
 const updateMetrics = (currentScenario, appliedStrategy) => {
   const updatedMetrics = { ...currentScenario.metrics };
-  const improvementFactor = 0.25; // 5% improvement for each correct strategy
+  const improvementFactor = 0.25; // higher metrics for good strategies
 
   switch (appliedStrategy) {
     case 'Regularization':
@@ -143,8 +136,7 @@ const updateMetrics = (currentScenario, appliedStrategy) => {
       updatedMetrics['F1 Score'] = Math.min(1, updatedMetrics['F1 Score'] * (1 + improvementFactor));
       break;
     default:
-      // No changes for unknown strategies
-      break;
+      break; // ignore if the strategy is not known
   }
 
   return updatedMetrics;
@@ -172,35 +164,29 @@ const handleSubmit = useCallback(async () => {
       If it matches, state which of the correct techniques it matches and why, please quote the exact spelling from the correct technique listed above.
       If it doesn't match, explain why it's not appropriate for this scenario and suggest one of the correct techniques.
 
-      Keep your response under 50 words, focused solely on evaluating the suggestion.
+      Keep your response under 50 words, focused only on evaluating the suggestion.
     `;
 
-    const feedback = await generateCompletion(prompt, encryptedApiKey);
+    const feedback = await generateCompletion(prompt, encryptedApiKey); // Call OpenAI API
 
-    // Utility function to remove specific characters (like quotes or periods) from a string
-    const sanitizeString = (str) => str.replace(/["'.]/g, '').toLowerCase();
-
-    // Check if the suggestion matches any correct technique, ignoring specified characters
+    const sanitizeString = (str) => str.replace(/["'.]/g, '').toLowerCase(); // Ignore quotes, periods and case
     const matchedTechnique = currentScenario.correctTechniques.find(technique => 
       sanitizeString(feedback).includes(sanitizeString(technique))
     );
 
     const isCorrect = matchedTechnique !== undefined;
 
-    // Update the current scenario
     const updatedScenario = { ...currentScenario };
     if (isCorrect && !updatedScenario.appliedStrategies.includes(matchedTechnique)) {
       updatedScenario.appliedStrategies.push(matchedTechnique);
       const progressIncrement = 100 / currentScenario.correctTechniques.length;
       updatedScenario.currentImprovement = Math.min(100, updatedScenario.currentImprovement + progressIncrement);
       
-      // Update metrics
       updatedScenario.metrics = updateMetrics(updatedScenario, matchedTechnique);
     }
 
     const isScenarioCompleted = updatedScenario.appliedStrategies.length === updatedScenario.correctTechniques.length;
 
-    // Update the predefined scenarios array
     const updatedScenarios = [...predefinedScenarios];
     updatedScenarios[currentScenarioIndex] = updatedScenario;
 
@@ -215,7 +201,6 @@ const handleSubmit = useCallback(async () => {
       currentIteration: isScenarioCompleted ? 1 : prev.currentIteration + 1,
     }));
 
-    // Immediately update the current scenario's improvement
     setCurrentScenarioImprovement(updatedScenario.currentImprovement);
 
     if (isScenarioCompleted) {
@@ -242,17 +227,11 @@ const handleSubmit = useCallback(async () => {
         <Card sx={{ maxWidth: 800, margin: 'auto' }}>
           <CardContent>
             <Typography variant="h4" component="div" color="primary" gutterBottom>
-              Model Evaluation Practise
+              Model Evaluation Practice
             </Typography>
             <DarkModeSwitch darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             {!apiKeyEntered ? (
               <ApiKeyInput handleApiKeySubmit={handleApiKeySubmit} />
-            ) : learningStage === 'toolSelection' ? (
-              <EvaluationToolSelector
-                selectedTools={selectedTools}
-                handleToolSelection={handleToolSelection}
-                onSubmit={startLearning}
-              />
             ) : (
               <>
                 <Typography variant="h6" gutterBottom>
@@ -265,7 +244,7 @@ const handleSubmit = useCallback(async () => {
                   quizState={quizState} 
                   theme={theme} 
                   currentScenario={{...predefinedScenarios[currentScenarioIndex], currentImprovement: currentScenarioImprovement}}
-                  selectedTools={[...new Set([...defaultTools, ...selectedTools])]}
+                  selectedTools={allMetrics}
                 />
                 <Typography variant="body2" gutterBottom>
                   Applied strategies: {predefinedScenarios[currentScenarioIndex].appliedStrategies.join(', ') || 'None'}

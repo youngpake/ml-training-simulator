@@ -164,9 +164,9 @@ const ChartContainer = ({ quizState, theme, currentScenario, selectedTools }) =>
 
       {/* Non-loss metric charts */}
       <Grid container spacing={2} sx={{ mb: 2 }}>
-        {nonLossMetrics.map(([key, value]) => (
-          <Grid item xs={12} sm={6} md={4} key={key}>
-            <MetricCard elevation={3} sx={{ height: 150 }}>
+        {nonLossMetrics.map(([key, value], index) => (
+          <Grid item xs={12} sm={6} md={nonLossMetrics.length <= 4 ? 6 : 4} key={key}>
+            <MetricCard elevation={3} sx={{ height: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {renderMetricChart(key, value)}
               </Box>
@@ -176,23 +176,23 @@ const ChartContainer = ({ quizState, theme, currentScenario, selectedTools }) =>
         ))}
       </Grid>
 
-        {lossMetrics.length > 0 && (
-          <>
-            <Typography variant="h6" gutterBottom sx={{ mt: 4, mb: 2, textAlign: 'center' }}>Loss Metrics</Typography>
-            <Grid container justifyContent="center" spacing={3}>
-          {lossMetrics.map(([key, value]) => (
-            <Grid item xs={12} sm={6} md={4} key={key}>
-              <MetricCard elevation={3} sx={{ display: 'flex', justifyContent: 'center' }}>
-            {renderLossMetric(key, value, maxLossValues[key] || 1.0)}
-            <MetricName>{key}</MetricName>
-              </MetricCard>
-            </Grid>
-          ))}
-            </Grid>
-          </>
-        )}
+      {lossMetrics.length > 0 && (
+        <>
+          <Typography variant="h6" gutterBottom sx={{ mt: 4, mb: 2, textAlign: 'center' }}>Loss Metrics</Typography>
+          <Grid container justifyContent="center" spacing={2}>
+            {lossMetrics.map(([key, value], index) => (
+              <Grid item xs={12} sm={6} md={lossMetrics.length <= 2 ? 6 : 4} key={key}>
+                <MetricCard elevation={3} sx={{ height: 250, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  {renderLossMetric(key, value, maxLossValues[key] || 1.0)}
+                  <MetricName>{key}</MetricName>
+                </MetricCard>
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
 
-        {/* Scenario Progress */}
+      {/* Scenario Progress */}
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6" gutterBottom>Scenario Progress</Typography>
         <LinearProgress 

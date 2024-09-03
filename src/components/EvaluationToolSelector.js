@@ -10,7 +10,6 @@ const evaluationTools = [
   { name: 'Precision', description: 'The ratio of true positives to all positive predictions.' },
   { name: 'Recall', description: 'The ratio of true positives to all actual positive instances.' },
   { name: 'F1 Score', description: 'The harmonic mean of precision and recall.' },
-  { name: 'ROC AUC', description: 'Area Under the Receiver Operating Characteristic curve.' },
 ];
 
 const StyledLabel = styled('span', {

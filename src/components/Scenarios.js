@@ -10,7 +10,6 @@ export const predefinedScenarios = [
       "Precision": 0.94,
       "Recall": 0.96,
       "F1 Score": 0.95,
-      "ROC AUC": 0.97
     },
     correctTechniques: ["Regularization", "Data Augmentation", "Early Stopping"],
     targetImprovement: 100,
@@ -34,7 +33,6 @@ export const predefinedScenarios = [
       "Precision": 0.66,
       "Recall": 0.64,
       "F1 Score": 0.65,
-      "ROC AUC": 0.68
     },
     correctTechniques: ["Increase Model Complexity", "Feature Engineering", "Ensemble Methods"],
     targetImprovement: 100,
@@ -58,7 +56,6 @@ export const predefinedScenarios = [
       "Precision": 0.95,
       "Recall": 0.20,
       "F1 Score": 0.33,
-      "ROC AUC": 0.75
     },
     correctTechniques: ["Resampling", "Class Weighting", "SMOTE"],
     targetImprovement: 100,
@@ -82,7 +79,6 @@ export const predefinedScenarios = [
       "Precision": 0.72,
       "Recall": 0.69,
       "F1 Score": 0.70,
-      "ROC AUC": 0.73
     },
     correctTechniques: ["Data Cleaning", "Robust Loss Functions", "Ensemble Methods"],
     targetImprovement: 100,
@@ -106,7 +102,6 @@ export const predefinedScenarios = [
       "Precision": 0.83,
       "Recall": 0.81,
       "F1 Score": 0.82,
-      "ROC AUC": 0.88
     },
     correctTechniques: ["Hierarchical Classification", "One-vs-Rest Strategy", "Error Analysis"],
     targetImprovement: 100,
