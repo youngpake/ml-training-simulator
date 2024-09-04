@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, Typography, Box, CircularProgress, LinearProgress } from '@mui/material';
+import { Grid, Paper, Typography, Box, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
 import { 
   ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, 
@@ -88,7 +88,7 @@ const ChartContainer = ({ quizState, theme, currentScenario, selectedTools }) =>
     }
 
     const percentage = (value / maxLoss) * 100;
-    const color = getColor(1 - percentage / 100); // Invert the color scale for loss
+    const color = getColor(1 - percentage / 100); // Invert the color because lower is better for loss metrics
     return (
       <Box sx={{ width: '100%', textAlign: 'center' }}>
         <CircularProgress
@@ -145,7 +145,7 @@ const ChartContainer = ({ quizState, theme, currentScenario, selectedTools }) =>
 
   return (
     <Box sx={{ mb: 4 }}>      
-      {/* Radar Chart for non-loss metrics */}
+      {/* Main Radar Chart */}
       {radarChartData.length > 0 && (
         <MetricCard elevation={3} sx={{ mb: 3 }}>
           <Typography variant="h6" gutterBottom>Overall Performance</Typography>
@@ -162,7 +162,7 @@ const ChartContainer = ({ quizState, theme, currentScenario, selectedTools }) =>
         </MetricCard>
       )}
 
-      {/* Non-loss metric charts */}
+      {/* Score metric charts */}
       <Grid container spacing={2} sx={{ mb: 2 }}>
         {nonLossMetrics.map(([key, value], index) => (
           <Grid item xs={12} sm={6} md={nonLossMetrics.length <= 4 ? 6 : 4} key={key}>
@@ -178,6 +178,7 @@ const ChartContainer = ({ quizState, theme, currentScenario, selectedTools }) =>
 
       {lossMetrics.length > 0 && (
         <>
+      {/* Loss metric charts */}
           <Typography variant="h6" gutterBottom sx={{ mt: 4, mb: 2, textAlign: 'center' }}>Loss Metrics</Typography>
           <Grid container justifyContent="center" spacing={2}>
             {lossMetrics.map(([key, value], index) => (
@@ -191,19 +192,6 @@ const ChartContainer = ({ quizState, theme, currentScenario, selectedTools }) =>
           </Grid>
         </>
       )}
-
-      {/* Scenario Progress */}
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h6" gutterBottom>Scenario Progress</Typography>
-        <LinearProgress 
-          variant="determinate" 
-          value={Math.round(currentScenario.currentImprovement)} 
-          sx={{ height: 10, borderRadius: 5 }}
-        />
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          Current Improvement: {Math.round(currentScenario.currentImprovement)}%
-        </Typography>
-      </Box>
     </Box>
   );
 };

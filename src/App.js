@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Card, CardContent, Typography, ThemeProvider, createTheme, Button } from '@mui/material';
+import { Box, Card, CardContent, Typography, ThemeProvider, createTheme, Button, LinearProgress } from '@mui/material';
 import DarkModeSwitch from './components/DarkModeSwitch';
 import ApiKeyInput from './components/ApiKeyInput';
 import ChartContainer from './components/ChartContainer';
@@ -220,65 +220,82 @@ const handleSubmit = useCallback(async () => {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', p: 3 }}>
-        <Card sx={{ maxWidth: 800, margin: 'auto' }}>
-          <CardContent>
-            <Typography variant="h4" component="div" color="primary" gutterBottom>
-              Model Evaluation Practice
-            </Typography>
-            <DarkModeSwitch darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', p: 3, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Card sx={{ width: '100%', maxWidth: 800, boxShadow: 3 }}>
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h4" component="div" color="primary" fontWeight="bold">
+                Model Evaluation Practice
+              </Typography>
+              <DarkModeSwitch darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            </Box>
+            
             {!apiKeyEntered ? (
               <ApiKeyInput handleApiKeySubmit={handleApiKeySubmit} />
             ) : (
               <>
-                <Typography variant="h6" gutterBottom>
-                  Scenario {currentScenarioIndex + 1}: {predefinedScenarios[currentScenarioIndex].name}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  {predefinedScenarios[currentScenarioIndex].description}
-                </Typography>
-                <ChartContainer 
-                  quizState={quizState} 
-                  theme={theme} 
-                  currentScenario={{...predefinedScenarios[currentScenarioIndex], currentImprovement: currentScenarioImprovement}}
-                  selectedTools={allMetrics}
-                />
-                <Typography variant="body2" gutterBottom>
-                  Applied strategies: {predefinedScenarios[currentScenarioIndex].appliedStrategies.join(', ') || 'None'}
-                </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="h5" color="secondary">
+                    Scenario {currentScenarioIndex + 1}: {predefinedScenarios[currentScenarioIndex].name}
+                  </Typography>
                   <Button 
                     variant="outlined" 
-                    color="primary" 
+                    color="secondary" 
                     onClick={generateHint}
                     disabled={quizState.isLoading}
                   >
                     Get Hint
                   </Button>
                 </Box>
+                
+                <Typography variant="body1">
+                  {predefinedScenarios[currentScenarioIndex].description}
+                </Typography>
+                
+                <ChartContainer 
+                  quizState={quizState} 
+                  theme={theme} 
+                  currentScenario={predefinedScenarios[currentScenarioIndex]}
+                  selectedTools={allMetrics}
+                />
+                
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', mb: 1 }}>
+                    Applied strategies: {predefinedScenarios[currentScenarioIndex].appliedStrategies.join(', ') || 'None'}
+                  </Typography>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={currentScenarioImprovement} 
+                    sx={{ height: 10, borderRadius: 5 }}
+                  />
+                  <Typography variant="caption" align="right" display="block" sx={{ mt: 0.5 }}>
+                    Progress: {currentScenarioImprovement.toFixed(0)}%
+                  </Typography>
+                </Box>
+                <Feedback 
+                  feedback={quizState.feedback} 
+                  isExcellentAnswer={quizState.isExcellentAnswer}
+                />
                 <UserInput
                   userInput={quizState.userInput}
                   setQuizState={setQuizState}
                   handleSubmit={handleSubmit}
                   isLoading={quizState.isLoading}
                 />
-                <Feedback 
-                  feedback={quizState.feedback} 
-                  isExcellentAnswer={quizState.isExcellentAnswer}
-                />
               </>
             )}
           </CardContent>
         </Card>
+        
         <CelebrationModal
           open={showCelebration}
           onClose={() => setShowCelebration(false)}
           onNext={handleNextScenario}
           scenarioName={predefinedScenarios[currentScenarioIndex].name}
         />
+        
         <HintModal
           open={showHintModal}
           onClose={() => setShowHintModal(false)}

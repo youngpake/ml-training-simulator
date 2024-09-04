@@ -46,5 +46,3 @@ This project is licensed under the [MIT License](LICENSE).
 ## 👨‍💼 Connect with Me
 
 Feel free to connect with me on LinkedIn: [Wytse Punter](https://www.linkedin.com/in/wytsepunter/)
-
-Happy learning! 🎉📚
