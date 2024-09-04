@@ -260,7 +260,10 @@ const handleSubmit = useCallback(async () => {
                   currentScenario={predefinedScenarios[currentScenarioIndex]}
                   selectedTools={allMetrics}
                 />
-                
+                <Feedback 
+                  feedback={quizState.feedback} 
+                  isExcellentAnswer={quizState.isExcellentAnswer}
+                />
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="body2" sx={{ fontStyle: 'italic', mb: 1 }}>
                     Applied strategies: {predefinedScenarios[currentScenarioIndex].appliedStrategies.join(', ') || 'None'}
@@ -274,10 +277,6 @@ const handleSubmit = useCallback(async () => {
                     Progress: {currentScenarioImprovement.toFixed(0)}%
                   </Typography>
                 </Box>
-                <Feedback 
-                  feedback={quizState.feedback} 
-                  isExcellentAnswer={quizState.isExcellentAnswer}
-                />
                 <UserInput
                   userInput={quizState.userInput}
                   setQuizState={setQuizState}
