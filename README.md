@@ -33,7 +33,7 @@ Check out the live demo of the ML Evaluation Tutor: [Live Demo](https://youngpak
 
 ## 🎨 Styling and Theming
 
-The application uses Material-UI (MUI) for styling and theming, including dark mode functionality.
+The application uses Material-UI for styling and theming
 
 ## 🤝 Contributing
 
@@ -46,8 +46,3 @@ This project is licensed under the [MIT License](LICENSE).
 ## 👨‍💼 Connect with Me
 
 Feel free to connect with me on LinkedIn: [Wytse Punter](https://www.linkedin.com/in/wytsepunter/)
-<<<<<<< HEAD
-=======
-
-Happy learning! 🎉📚
->>>>>>> ed9186f77f6a7f159fe71ade39dbbbee5f175456
