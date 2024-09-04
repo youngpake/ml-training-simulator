@@ -15,7 +15,7 @@
 
 ## 🚀 Try it Out
 
-Check out the live demo of the ML Evaluation Tutor: [Live Demo](https://your-demo-link.com) 🌐
+Check out the live demo of the ML Evaluation Tutor: [Live Demo](https://youngpake.github.io/ml-training-simulator/) 🌐
 
 ## 📹 Demo Video
 
@@ -46,3 +46,8 @@ This project is licensed under the [MIT License](LICENSE).
 ## 👨‍💼 Connect with Me
 
 Feel free to connect with me on LinkedIn: [Wytse Punter](https://www.linkedin.com/in/wytsepunter/)
+<<<<<<< HEAD
+=======
+
+Happy learning! 🎉📚
+>>>>>>> ed9186f77f6a7f159fe71ade39dbbbee5f175456
